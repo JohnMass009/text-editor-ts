@@ -20,17 +20,12 @@
     /* Redirect output structure to the directory. */
     "rootDir": "./src",
     /* Specify the root directory of input files. */
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "@core/*": [
-        "src/core/*"
-      ],
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@interfaces/*": [
-        "src/interfaces/*"
-      ]
+      "@/*": ["./*"],
+      "@core/*": ["core/*"],
+      "@components/*": ["components/*"],
+      "@interfaces/*": ["interfaces/*"]
     },
     // "composite": true,                     /* Enable project compilation */
     // "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */

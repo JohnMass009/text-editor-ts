@@ -21,9 +21,16 @@
   "rules": {
     "semi": "off",
     "linebreak-style": "off",
-    "max-len": ["warn", { "code": 100 }],
     "eol-last": "off",
     "curly": "off",
-    "no-trailing-spaces": "off"
+    "no-trailing-spaces": "off",
+    "require-jsdoc": "off",
+    "operator-linebreak": "off",
+    "max-len": ["warn", { "code": 100 }],
+    "padded-blocks": "warn",
+    "prefer-const": "warn",
+    "no-unused-vars": "warn",
+    "no-multiple-empty-lines": "warn",
+    "keyword-spacing": "warn"
   }
 }
