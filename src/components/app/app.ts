@@ -1,44 +1,55 @@
 import {IComponent} from '@interfaces/icomponent';
-import {DomManager} from "@core/DomManager";
 import {Header} from '@components/header/header';
-import {Toolbar} from "@components/header/toolbar";
-import {EventListener} from "@core/EventListener";
+import {Toolbar} from "@components/toolbar/toolbar";
+import {Component} from "@core/Component";
 
-export class App extends EventListener implements IComponent {
-  className: string;
-  components: any[];
-  constructor(className: string,
-              components: any[] = [],
-              eventListeners: any[] = []) {
-    super(className, eventListeners);
-    this.className = className;
-    this.components = components;
+export class App extends Component implements IComponent {
+  components: any[] = [];
+  constructor(tagName: string = 'div',
+              className: string[] | null = null,
+              components: any[] | null = null,
+              eventListeners: any[] | null = null) {
+    super(tagName, className, eventListeners);
 
-    this.initChilds();
-  }
-
-  initChilds(): void {
-    const header = new Header('header');
-    const toolbar = new Toolbar('toolbar');
-    this.components.push(header, toolbar);
-  }
-
-  renderContent(): any[] {
-    const content = [];
-    content.push('App Component');
-    if (this.components) {
-      this.components.forEach((component) => {
-        content.push(component.render())
-      });
+    if (components) {
+      this.components = components;
     }
+  }
+
+  onInput(event: Event) {
+    console.log(event)
+  }
+
+  onClick(event: Event) {
+    console.log(this)
+  }
+
+  createContent(): any[] | null {
+    const content = [];
+    content.push(`<h1>App Component</h1>`);
+
+    const header = new Header('div',
+                  null,
+                 null,
+              ['input', 'click']);
+    const toolbar = new Toolbar('div',
+                    ['toolbar'],
+                   null,
+                 ['click']);
+    this.components.push(header, toolbar);
+
+    if (this.components)
+      this.components.forEach((component) => {
+        content.push(component.render());
+      });
 
     return content;
   }
 
   render(): HTMLElement {
-    return DomManager
-            .createElement('div',
-              [this.className],
-              this.renderContent());
+    const content = this.createContent();
+    this.initEvents();
+
+    return super.render(content);
   }
 }

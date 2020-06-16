@@ -1,36 +1,20 @@
 export class DomManager {
-  private $element: Element;
+  private $element: HTMLElement;
 
-  constructor(selector: Element | string) {
-    this.$element = typeof selector === 'string'
-      ? DomManager.findElement(selector)
-      : selector;
+  constructor(element: HTMLElement | string) {
+    this.$element = typeof element === 'string'
+      ? DomManager.findElement(element)
+      : element;
   }
 
-  static createElement(tagName: string,
-                       classes: string[] = [],
-                       children: any[] = []): HTMLElement {
+  static createDomComponent(tagName: string,
+                       classes: string[] | null = null): DomManager {
     let $element = document.createElement(tagName);
 
     if (classes)
       $element.classList.add(...classes);
 
-    if (children) {
-      children.forEach((child) => {
-        $element = DomManager.append(child, $element);
-      });
-    }
-
-    return $element;
-  }
-
-  static append(node: HTMLElement | string, rootElement: HTMLElement) {
-    if (typeof node === 'string')
-      rootElement.insertAdjacentHTML('beforeend', node);
-    else
-      rootElement.append(node);
-
-    return rootElement;
+    return new DomManager($element);
   }
 
   static findElement(selector: string): HTMLElement {
@@ -49,14 +33,38 @@ export class DomManager {
     else
       $root = rootElement;
 
-    DomManager.append(node, $root);
+    if (typeof node === 'string')
+      $root.insertAdjacentHTML('beforeend', node);
+    else
+      $root.append(node);
   }
 
-  static addEvent(element: HTMLElement, eventType: string, callback: EventListener): void {
-    element.addEventListener(eventType, callback);
+  get getElement() {
+    return this.$element;
   }
 
-  static removeEvent(element: HTMLElement, eventType: string, callback: EventListener): void {
-    element.removeEventListener(eventType, callback);
+  addEvent(eventType: string, callback: EventListener): void {
+    this.$element.addEventListener(eventType, callback);
+  }
+
+  removeEvent(eventType: string, callback: EventListener): void {
+    this.$element.removeEventListener(eventType, callback);
+  }
+
+  insertChild(node: HTMLElement | string): void {
+    if (typeof node === 'string')
+      this.$element.insertAdjacentHTML('beforeend', node);
+    else
+      this.$element.append(node);
+  }
+
+  returnHtmlElement(children: any[] | null = []): HTMLElement {
+    if (children) {
+      children.forEach((child) => {
+        this.insertChild(child);
+      });
+    }
+
+    return this.$element;
   }
 }
