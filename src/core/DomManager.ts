@@ -1,36 +1,22 @@
-export class DomManager {
-  private $element: Element;
+import {ObjectAny} from "@core/types";
 
-  constructor(selector: Element | string) {
-    this.$element = typeof selector === 'string'
-      ? DomManager.findElement(selector)
-      : selector;
+export class DomManager {
+  private $element: HTMLElement;
+
+  constructor(element: HTMLElement | string) {
+    this.$element = typeof element === 'string'
+      ? DomManager.findElement(element)
+      : element;
   }
 
-  static createElement(tagName: string,
-                       classes: string[] = [],
-                       children: any[] = []): HTMLElement {
+  static createDomComponent(tagName: string,
+                       classes: string[] | null = null): DomManager {
     let $element = document.createElement(tagName);
 
     if (classes)
       $element.classList.add(...classes);
 
-    if (children) {
-      children.forEach((child) => {
-        $element = DomManager.append(child, $element);
-      });
-    }
-
-    return $element;
-  }
-
-  static append(node: HTMLElement | string, rootElement: HTMLElement) {
-    if (typeof node === 'string')
-      rootElement.insertAdjacentHTML('beforeend', node);
-    else
-      rootElement.append(node);
-
-    return rootElement;
+    return new DomManager($element);
   }
 
   static findElement(selector: string): HTMLElement {
@@ -49,14 +35,82 @@ export class DomManager {
     else
       $root = rootElement;
 
-    DomManager.append(node, $root);
+    if (typeof node === 'string')
+      $root.insertAdjacentHTML('beforeend', node);
+    else
+      $root.append(node);
   }
 
-  static addEvent(element: HTMLElement, eventType: string, callback: EventListener): void {
-    element.addEventListener(eventType, callback);
+  get getElement() {
+    return this.$element;
   }
 
-  static removeEvent(element: HTMLElement, eventType: string, callback: EventListener): void {
-    element.removeEventListener(eventType, callback);
+  addEvent(eventType: string, callback: EventListener): void {
+    this.$element.addEventListener(eventType, callback);
+  }
+
+  removeEvent(eventType: string, callback: EventListener): void {
+    this.$element.removeEventListener(eventType, callback);
+  }
+
+  insertChild(node: HTMLElement | string): void {
+    if (typeof node === 'string')
+      this.$element.insertAdjacentHTML('beforeend', node);
+    else
+      this.$element.append(node);
+  }
+
+  returnHtmlElement(children: any[] | null = []): HTMLElement {
+    if (children) {
+      children.forEach((child) => {
+        this.insertChild(child);
+      });
+    }
+
+    return this.$element;
+  }
+
+  findParent(selector: string) {
+    return this.$element.closest(selector);
+  }
+
+  getSize() {
+    const { width, height } = this.$element.getBoundingClientRect();
+    return { width, height };
+  }
+
+  getCoordinates() {
+    const { left, right, top, bottom } = this.$element.getBoundingClientRect();
+    return { left, right, top, bottom };
+  }
+
+  getDataAtr(selector: string) {
+    return this.$element.dataset[selector];
+  }
+
+  setDataAtr(selector: string, value: string) {
+    this.$element.dataset[selector] = value;
+  }
+
+  getValueStyle(style: string) {
+    return window.getComputedStyle(this.$element).getPropertyValue(style);
+  }
+
+  setStyles(styles: ObjectAny = {}) {
+    Object.keys(styles).forEach((key: string) => {
+      this.$element.style.setProperty(key, styles[key]);
+    });
+  }
+
+  setClass(className: string) {
+    this.$element.classList.add(className);
+  }
+
+  removeClass(className: string) {
+    this.$element.classList.remove(className);
+  }
+
+  focus() {
+    this.$element.focus();
   }
 }
