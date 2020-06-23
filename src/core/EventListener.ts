@@ -2,34 +2,34 @@ import {getStrWithFirstUpperLetter} from '@core/utils';
 import {DomManager} from '@core/DomManager';
 
 export class EventListener {
-  listeners: any[] | null;
+  public eventListeners: any[] | null;
 
-  constructor(listeners: any[] | null = null) {
-    this.listeners = listeners;
+  constructor(eventListeners: any[] | null = null) {
+    this.eventListeners = eventListeners;
   }
 
   protected initListeners($element: DomManager) {
-    if (this.listeners)
-      this.listeners.forEach((listener) => {
-        const nameFunc = getMethodName(listener);
+    if (this.eventListeners)
+      this.eventListeners.forEach((eventListener) => {
+        const nameFunc = getMethodName(eventListener);
         const component: any = this;
         if (!component[nameFunc])
           throw Error(`Method ${nameFunc} is not implemented in ${this.constructor.name}`);
 
         component[nameFunc] = component[nameFunc].bind(this);
-        $element.addEvent(listener, component[nameFunc]);
+        $element.addEvent(eventListener, component[nameFunc]);
       });
   }
 
   protected removeListeners($element: DomManager) {
-    if (this.listeners)
-      this.listeners.forEach((listener) => {
-        const nameFunc = getMethodName(listener);
+    if (this.eventListeners)
+      this.eventListeners.forEach((eventListener) => {
+        const nameFunc = getMethodName(eventListener);
         const component: any = this;
         if (!component[nameFunc])
           throw Error(`Method ${nameFunc} is not implemented in ${this.constructor.name}`);
 
-        $element.removeEvent(listener, component[nameFunc]);
+        $element.removeEvent(eventListener, component[nameFunc]);
       });
   }
 }

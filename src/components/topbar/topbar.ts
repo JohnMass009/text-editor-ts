@@ -1,9 +1,8 @@
 import {Component} from "@core/Component";
 
-export class Toolbar extends Component {
-  components: any[] = [];
+export class Topbar extends Component {
   constructor(tagName: string = 'div',
-              classes: string[] | null = [],
+              classes: string[] | null = null,
               props: object | null = null,
               components: any[] | null = [],
               eventListeners: any[] = []) {
@@ -14,12 +13,16 @@ export class Toolbar extends Component {
     }
   }
 
+  onInput(event: Event) {
+    console.log(event)
+  }
+
   onClick(event: Event) {
     console.log(this)
   }
 
   createContent(): any[] | null {
-    this.content.push(`<h3>Toolbar Component</h3>`);
+    this.content.push(`<h3>Topbar Component</h3>`);
 
     return super.createContent();
   }

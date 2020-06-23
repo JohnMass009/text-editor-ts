@@ -1,3 +1,5 @@
+import {ObjectAny} from "@core/types";
+
 export class DomManager {
   private $element: HTMLElement;
 
@@ -66,5 +68,49 @@ export class DomManager {
     }
 
     return this.$element;
+  }
+
+  findParent(selector: string) {
+    return this.$element.closest(selector);
+  }
+
+  getSize() {
+    const { width, height } = this.$element.getBoundingClientRect();
+    return { width, height };
+  }
+
+  getCoordinates() {
+    const { left, right, top, bottom } = this.$element.getBoundingClientRect();
+    return { left, right, top, bottom };
+  }
+
+  getDataAtr(selector: string) {
+    return this.$element.dataset[selector];
+  }
+
+  setDataAtr(selector: string, value: string) {
+    this.$element.dataset[selector] = value;
+  }
+
+  getValueStyle(style: string) {
+    return window.getComputedStyle(this.$element).getPropertyValue(style);
+  }
+
+  setStyles(styles: ObjectAny = {}) {
+    Object.keys(styles).forEach((key: string) => {
+      this.$element.style.setProperty(key, styles[key]);
+    });
+  }
+
+  setClass(className: string) {
+    this.$element.classList.add(className);
+  }
+
+  removeClass(className: string) {
+    this.$element.classList.remove(className);
+  }
+
+  focus() {
+    this.$element.focus();
   }
 }

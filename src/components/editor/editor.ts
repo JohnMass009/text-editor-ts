@@ -1,12 +1,12 @@
 import {Component} from "@core/Component";
 
-export class Toolbar extends Component {
+export class Editor extends Component {
   components: any[] = [];
   constructor(tagName: string = 'div',
-              classes: string[] | null = [],
+              classes: string[] | null = null,
               props: object | null = null,
-              components: any[] | null = [],
-              eventListeners: any[] = []) {
+              components: any[] | null = null,
+              eventListeners: any[] | null = null) {
     super(tagName, classes, props, eventListeners);
 
     if (components) {
@@ -14,12 +14,16 @@ export class Toolbar extends Component {
     }
   }
 
+  onInput(event: Event) {
+    console.log(event)
+  }
+
   onClick(event: Event) {
     console.log(this)
   }
 
   createContent(): any[] | null {
-    this.content.push(`<h3>Toolbar Component</h3>`);
+    this.content.push(`<h1>Editor Component</h1>`);
 
     return super.createContent();
   }

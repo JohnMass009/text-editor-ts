@@ -1,18 +1,25 @@
-import {IComponent} from '@interfaces/icomponent';
-import {Header} from '@components/header/header';
+import {Topbar} from '@components/topbar/topbar';
 import {Toolbar} from "@components/toolbar/toolbar";
 import {Component} from "@core/Component";
+import {Editor} from "@components/editor/editor";
+import {StoreSubscriber} from "@/redux/StoreSubscriber";
 
-export class App extends Component implements IComponent {
-  components: any[] = [];
+export class App extends Component {
+  public store: object = {};
   constructor(tagName: string = 'div',
-              className: string[] | null = null,
+              classes: string[] | null = null,
+              props: object | null = null,
               components: any[] | null = null,
               eventListeners: any[] | null = null) {
-    super(tagName, className, eventListeners);
+    super(tagName, classes, props, eventListeners);
 
     if (components) {
       this.components = components;
+    }
+
+    if (this.props && 'store' in this.props) {
+      this.store = this.props.store;
+      const storeSubscriber = new StoreSubscriber(this.store);
     }
   }
 
@@ -25,25 +32,29 @@ export class App extends Component implements IComponent {
   }
 
   createContent(): any[] | null {
-    const content = [];
-    content.push(`<h1>App Component</h1>`);
+    this.content.push(`<h3>App Component</h3>`);
 
-    const header = new Header('div',
-                  null,
-                 null,
+    const topbar = new Topbar(
+                    'div',
+                  ['topbar'],
+                      null,
+                null,
               ['input', 'click']);
-    const toolbar = new Toolbar('div',
+    const toolbar = new Toolbar(
+                      'div',
                     ['toolbar'],
-                   null,
-                 ['click']);
-    this.components.push(header, toolbar);
+                        null,
+                  null,
+                ['click']);
+    const editor = new Editor(
+                    'div',
+                  ['editor'],
+                      null,
+                null,
+              ['click']);
+    this.components.push(topbar, toolbar, editor);
 
-    if (this.components)
-      this.components.forEach((component) => {
-        content.push(component.render());
-      });
-
-    return content;
+    return super.createContent();
   }
 
   render(): HTMLElement {
